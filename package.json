@@ -1,0 +1,22 @@
+{
+  "name": "@cch137/chee",
+  "version": "1.0.0",
+  "description": "``` npm init --scope=cch137 npm set registry https://registry.npmjs.org/",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cch137/chee.git"
+  },
+  "keywords": [
+    "chee"
+  ],
+  "author": "cch137",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cch137/chee/issues"
+  },
+  "homepage": "https://github.com/cch137/chee#readme"
+}
