@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/cch137/chee/issues"
   },
-  "homepage": "https://github.com/cch137/chee#readme"
+  "homepage": "https://github.com/cch137/chee#readme",
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "mersenne-twister": "^1.1.0"
+  }
 }
