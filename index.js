@@ -3,17 +3,21 @@ const path = require('path');
 const MersenneTwister = require('mersenne-twister');
 const crypto = require('crypto');
 
+let CONFIG_PATH;
 
-const SECRET_KEY = process.env.SECRET_KEY;
-const CONFIG_PATH = path.join(__dirname, '../config.json');
-
-const chee = {};
-
-chee.config = require(CONFIG_PATH);
-
-chee.saveConfig = () => {
-  fs.writeFileSync(CONFIG_PATH, JSON.stringify(chee.config, null, 4), {encoding: 'utf8'});
-}
+const chee = {
+  SECRET_KEY: 'https://github.com/cch137/chee',
+  get CONFIG_PATH() {
+    return CONFIG_PATH;
+  },
+  set CONFIG_PATH(v) {
+    CONFIG_PATH = v;
+    chee.config = require(v);
+    chee.saveConfig = () => {
+      fs.writeFileSync(CONFIG_PATH, JSON.stringify(chee.config, null, 4), {encoding: 'utf8'});
+    }
+  }
+};
 
 class Cookies {
   constructor(cookiesString='') {
@@ -279,7 +283,7 @@ chee.crypto = (() => {
   return {
     get MT() {return MersenneTwister},
     md5: (str, _digest='hex') => crypto.createHash('md5').update(str).digest(_digest),
-    sha256: (str, _digest='hex') => crypto.createHash('sha256', SECRET_KEY).update(str).digest(_digest),
+    sha256: (str, _digest='hex') => crypto.createHash('sha256', chee.SECRET_KEY).update(str).digest(_digest),
     encryp: (string) => {
       if (typeof string != 'string') string = string.toString();
       const seed1 = Math.round(new Date().getTime() * Math.random() / 137 / 137 / 137);
