@@ -3,6 +3,9 @@ const path = require('path');
 const MersenneTwister = require('mersenne-twister');
 const crypto = require('crypto');
 
+
+const { isArray } = Array;
+
 let CONFIG_PATH;
 
 const chee = {
@@ -72,7 +75,7 @@ chee.unique = (arr) => [...new Set(arr)];
 
 chee.isIterable = (obj) => typeof obj[Symbol.iterator] === 'function';
 
-chee.isArray = Array.isArray;
+chee.isArray = isArray;
 
 chee.range = (a=null, b=null, c=null) => {
   const numbers = [];
@@ -107,7 +110,7 @@ chee.walkdir = (_dir, type=1) => {
 };
 
 chee.trimObj = (obj) => {
-  if (Array.isArray(obj)) {
+  if (isArray(obj)) {
     for (let i = 0; i < obj.length; i++) if (typeof obj === 'object') obj[i] = trimObj(obj[i]);
   } else {
     for (const i in obj) {
@@ -348,7 +351,7 @@ chee.frontendPack = () => {
   return {
     config: chee.config,
     valid: chee.valid,
-    isArray: chee.isArray,
+    isArray,
     isIterable: chee.isIterable,
     unique: chee.unique,
     range: chee.range,
