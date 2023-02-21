@@ -33,7 +33,6 @@ class Cookies {
 chee.cookies = (str) => new Cookies(str);
 
 chee.valid = {
-  unique: (arr) => [...new Set(arr)],
   capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   },
@@ -68,6 +67,12 @@ chee.valid = {
     return `https://youtu.be/${ match[1] || match[2] }`;
   }
 };
+
+chee.unique = (arr) => [...new Set(arr)];
+
+chee.isIterable = (obj) => typeof obj[Symbol.iterator] === 'function';
+
+chee.isArray = Array.isArray;
 
 chee.range = (a=null, b=null, c=null) => {
   const numbers = [];
@@ -113,6 +118,7 @@ chee.trimObj = (obj) => {
 };
 
 chee.escapeString = (str) => JSON.stringify(str).slice(1, -1);
+
 chee.formatBytes = (fileSizeByte=0, toFix=2) => {
   const d = parseInt(Math.log(fileSizeByte) / Math.log(1024))||0;
   return `${(fileSizeByte/Math.pow(1024, d>5?5:d)).toFixed(toFix)} ${['','K','M','G','T','P'][d>5?5:d]}B`;
