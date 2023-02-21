@@ -75,7 +75,7 @@ chee.unique = (arr) => [...new Set(arr)];
 
 chee.isIterable = (obj) => typeof obj[Symbol.iterator] === 'function';
 
-chee.isArray = isArray;
+chee.isArray = (arg) => Array.isArray(arg);
 
 chee.range = (a=null, b=null, c=null) => {
   const numbers = [];
