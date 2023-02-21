@@ -1,6 +1,6 @@
 {
   "name": "@cch137/chee",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "``` npm init --scope=cch137 npm set registry https://registry.npmjs.org/",
   "main": "index.js",
   "scripts": {

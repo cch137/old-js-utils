@@ -348,6 +348,9 @@ chee.frontendPack = () => {
   return {
     config: chee.config,
     valid: chee.valid,
+    isArray: chee.isArray,
+    isIterable: chee.isIterable,
+    unique: chee.unique,
     range: chee.range,
     time: chee.time,
     escapeString: chee.escapeString,
