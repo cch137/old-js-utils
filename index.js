@@ -677,7 +677,7 @@ chee.frontendPack = () => {
     escapeString: chee.escapeString,
     trimObj: chee.trimObj,
     base: chee.base,
-    crypto: chee.crypto.caesar,
+    crypto: chee.crypto,
     random: chee.random,
     modules: chee.modules,
     formatBytes: chee.formatBytes,
