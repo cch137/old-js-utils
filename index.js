@@ -514,7 +514,6 @@ chee.random = {
       };
       return result;
     },
-    get tempMT() {return chee.random.mt.new()},
     choice: (array, mt) => {
       if (!mt) mt = chee.modules.MersenneTwister();
       return array[Math.floor(mt.random()*array.length)];
@@ -608,15 +607,14 @@ chee.crypto = (() => {
     return result;
   };
   return {
-    get MT() {return chee.modules.MersenneTwister},
     md5: (str) => chee.modules.md5(str),
     sha256: (str) => chee.modules.sha256(str),
     encryp: (string) => {
       if (typeof string != 'string') string = string.toString();
       const seed1 = Math.round(new Date().getTime() * Math.random() / 137 / 137 / 137);
-      const MT1 = chee.crypto.MT(seed1);
+      const MT1 = chee.modules.MersenneTwister(seed1);
       const seed2 = generateNewSeed(seed1, MT1) * 1114111;
-      const MT2 = chee.crypto.MT(seed2);
+      const MT2 = chee.modules.MersenneTwister(seed2);
       const crypMaterial1 = Array.from(string, _ => Math.round(MT1.random() * 1114111));
       const crypMaterial2 = generateShuffledIndexes(MT2, string.length);
       const crypData = Array.from(string, _ => _.charCodeAt(0) + crypMaterial1.pop());
@@ -626,9 +624,9 @@ chee.crypto = (() => {
     },
     decryp: (crypData) => {
       const seed1 = crypData.splice(Math.floor(crypData.length / 3), 1)[0];
-      const MT1 = chee.crypto.MT(seed1);
+      const MT1 = chee.modules.MersenneTwister(seed1);
       const seed2 = generateNewSeed(seed1, MT1) * 1114111;
-      const MT2 = chee.crypto.MT(seed2);
+      const MT2 = chee.modules.MersenneTwister(seed2);
       const crypMaterial1 = Array.from(crypData, _ => Math.round(MT1.random() * 1114111));
       const crypMaterial2 = generateShuffledIndexes(MT2, crypData.length);
       const result = Array.from(crypData, _ => null);
@@ -636,9 +634,7 @@ chee.crypto = (() => {
       return Array.from(result, _ => String.fromCharCode(_ - crypMaterial1.pop())).join('');
     },
     caesar: {
-      get order() {
-        return 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_`~!@#$%^&*()=+\t[{]}|\\:;"\'<,>.?/ \n';
-      },
+      order: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_`~!@#$%^&*()=+\t[{]}|\\:;"\'<,>.?/ \n',
       encryp: (text, cipher=chee.SECRET_KEY) => {
         const mt = chee.random.mt.new(cipher);
         const shuffledOrder = chee.random.mt.shuffle(chee.crypto.caesar.order, mt);
