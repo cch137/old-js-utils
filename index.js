@@ -34,8 +34,16 @@ class Cookies {
 chee.cookies = (str) => new Cookies(str);
 
 chee.modules = {
-  MersenneTwister: function MersenneTwister(seed) {
-    if (seed === undefined) seed = new Date().getTime();
+  MT: function MersenneTwister(seed) {
+    if (seed === undefined) {
+      seed = new Date().getTime();
+    } else if (typeof seed !== 'number') {
+      if (Number.isNaN(+seed)) {
+        seed = chee.base.b64toB10_(atob(onlyAsciiChars(seed.toString())));
+      } else {
+        seed = +seed;
+      }
+    }
     this.seed = seed;
     this.N = 624;
     this.M = 397;
@@ -452,13 +460,25 @@ chee.base = {
     return result.reverse().join('') || baseChars[0];
   },
   b10toB64: (number) => chee.base.__b10toBx(number, 64),
-  b64toB10: (string) => {
+  b64toB10(string, b64Chars) {
     let result = 0;
     string = string.split('').reverse().join('');
     for (let i = 0; i < string.length;) {
-      result += (chee.base.chars['64'].indexOf(string[i])) * Math.pow(64, i++);
+      result += ((b64Chars || chee.base.chars['64']).indexOf(string[i])) * Math.pow(64, i++);
     }
     return result;
+  },
+  b64toB10_(string) {
+    return chee.base.b64toB10(string, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/');
+  },
+  onlyAsciiChars(str) {
+    let asciiStr = '';
+    for (let i = 0; i < str.length; i++) {
+      if (str.charCodeAt(i) <= 127) {
+        asciiStr += str.charAt(i);
+      }
+    }
+    return asciiStr;
   }
 };
 
@@ -499,12 +519,9 @@ chee.random = {
     return g;
   },
   mt: {
-    new: (seed=undefined) => {
-      if (seed === undefined) seed = Math.random() * 1000;
-      return chee.modules.MersenneTwister(seed);
-    },
+    new: (seed) => chee.modules.MT(seed),
     choices: (_array, amount=1, mt) => {
-      if (!mt) mt = chee.modules.MersenneTwister();
+      if (!mt) mt = chee.modules.MT();
       const result = [];
       let array = [];
       for (let i = 0; i < amount; i++) {
@@ -515,11 +532,11 @@ chee.random = {
       return result;
     },
     choice: (array, mt) => {
-      if (!mt) mt = chee.modules.MersenneTwister();
+      if (!mt) mt = chee.modules.MT();
       return array[Math.floor(mt.random()*array.length)];
     },
     shuffle: (array, mt) => {
-      if (!mt) mt = chee.modules.MersenneTwister();
+      if (!mt) mt = chee.modules.MT();
       return chee.random.mt.choices(array, array.length, mt);
     }
   }
@@ -592,7 +609,7 @@ chee.time = {
 
 chee.crypto = (() => {
   const generateNewSeed = (motherSeed, MT) => {
-    const seedGeneratorMT = chee.modules.MersenneTwister(MT.random()), _ = motherSeed % 3;
+    const seedGeneratorMT = chee.modules.MT(MT.random()), _ = motherSeed % 3;
     let i = 0;
     while (i++ < _) seedGeneratorMT.random();
     return seedGeneratorMT.random();
@@ -612,9 +629,9 @@ chee.crypto = (() => {
     encryp: (string) => {
       if (typeof string != 'string') string = string.toString();
       const seed1 = Math.round(new Date().getTime() * Math.random() / 137 / 137 / 137);
-      const MT1 = chee.modules.MersenneTwister(seed1);
+      const MT1 = chee.modules.MT(seed1);
       const seed2 = generateNewSeed(seed1, MT1) * 1114111;
-      const MT2 = chee.modules.MersenneTwister(seed2);
+      const MT2 = chee.modules.MT(seed2);
       const crypMaterial1 = Array.from(string, _ => Math.round(MT1.random() * 1114111));
       const crypMaterial2 = generateShuffledIndexes(MT2, string.length);
       const crypData = Array.from(string, _ => _.charCodeAt(0) + crypMaterial1.pop());
@@ -624,9 +641,9 @@ chee.crypto = (() => {
     },
     decryp: (crypData) => {
       const seed1 = crypData.splice(Math.floor(crypData.length / 3), 1)[0];
-      const MT1 = chee.modules.MersenneTwister(seed1);
+      const MT1 = chee.modules.MT(seed1);
       const seed2 = generateNewSeed(seed1, MT1) * 1114111;
-      const MT2 = chee.modules.MersenneTwister(seed2);
+      const MT2 = chee.modules.MT(seed2);
       const crypMaterial1 = Array.from(crypData, _ => Math.round(MT1.random() * 1114111));
       const crypMaterial2 = generateShuffledIndexes(MT2, crypData.length);
       const result = Array.from(crypData, _ => null);
@@ -635,7 +652,7 @@ chee.crypto = (() => {
     },
     caesar: {
       order: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_`~!@#$%^&*()=+\t[{]}|\\:;"\'<,>.?/ \n',
-      encryp: (text, cipher=chee.SECRET_KEY) => {
+      encryp: (text, cipher=chee.SECRET_KEY||'helloworld') => {
         const mt = chee.random.mt.new(cipher);
         const shuffledOrder = chee.random.mt.shuffle(chee.crypto.caesar.order, mt);
         const result = [];
@@ -646,7 +663,7 @@ chee.crypto = (() => {
         }
         return result.join('');
       },
-      decryp: (text, cipher=chee.SECRET_KEY) => {
+      decryp: (text, cipher=chee.SECRET_KEY||'helloworld') => {
         const mt = chee.random.mt.new(cipher);
         const shuffledOrder = chee.random.mt.shuffle(chee.crypto.caesar.order, mt);
         const result = [];

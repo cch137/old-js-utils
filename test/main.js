@@ -103,19 +103,29 @@ const chee = {"config":undefined,"valid":{"capitalize":function(str) {
       result.push(baseChars[n]);
     }
     return result.reverse().join('') || baseChars[0];
-  },"b10toB64":(number) => chee.base.__b10toBx(number, 64),"b64toB10":(string) => {
+  },"b10toB64":(number) => chee.base.__b10toBx(number, 64),"b64toB10":function(string, b64Chars) {
     let result = 0;
     string = string.split('').reverse().join('');
     for (let i = 0; i < string.length;) {
-      result += (chee.base.chars['64'].indexOf(string[i])) * Math.pow(64, i++);
+      result += ((b64Chars || chee.base.chars['64']).indexOf(string[i])) * Math.pow(64, i++);
     }
     return result;
+  },"b64toB10_":function(string) {
+    return chee.base.b64toB10(string, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/');
+  },"onlyAsciiChars":function(str) {
+    let asciiStr = '';
+    for (let i = 0; i < str.length; i++) {
+      if (str.charCodeAt(i) <= 127) {
+        asciiStr += str.charAt(i);
+      }
+    }
+    return asciiStr;
   }},"crypto":{"md5":(str) => chee.modules.md5(str),"sha256":(str) => chee.modules.sha256(str),"encryp":(string) => {
       if (typeof string != 'string') string = string.toString();
       const seed1 = Math.round(new Date().getTime() * Math.random() / 137 / 137 / 137);
-      const MT1 = chee.modules.MersenneTwister(seed1);
+      const MT1 = chee.modules.MT(seed1);
       const seed2 = generateNewSeed(seed1, MT1) * 1114111;
-      const MT2 = chee.modules.MersenneTwister(seed2);
+      const MT2 = chee.modules.MT(seed2);
       const crypMaterial1 = Array.from(string, _ => Math.round(MT1.random() * 1114111));
       const crypMaterial2 = generateShuffledIndexes(MT2, string.length);
       const crypData = Array.from(string, _ => _.charCodeAt(0) + crypMaterial1.pop());
@@ -124,15 +134,15 @@ const chee = {"config":undefined,"valid":{"capitalize":function(str) {
       return result;
     },"decryp":(crypData) => {
       const seed1 = crypData.splice(Math.floor(crypData.length / 3), 1)[0];
-      const MT1 = chee.modules.MersenneTwister(seed1);
+      const MT1 = chee.modules.MT(seed1);
       const seed2 = generateNewSeed(seed1, MT1) * 1114111;
-      const MT2 = chee.modules.MersenneTwister(seed2);
+      const MT2 = chee.modules.MT(seed2);
       const crypMaterial1 = Array.from(crypData, _ => Math.round(MT1.random() * 1114111));
       const crypMaterial2 = generateShuffledIndexes(MT2, crypData.length);
       const result = Array.from(crypData, _ => null);
       for (const i of crypMaterial2) result[i] = crypData.shift();
       return Array.from(result, _ => String.fromCharCode(_ - crypMaterial1.pop())).join('');
-    },"caesar":{"order":"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_`~!@#$%^&*()=+\t[{]}|\\:;\"'\u003C,\u003E.?\u002F \n","encryp":(text, cipher=chee.SECRET_KEY) => {
+    },"caesar":{"order":"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_`~!@#$%^&*()=+\t[{]}|\\:;\"'\u003C,\u003E.?\u002F \n","encryp":(text, cipher=chee.SECRET_KEY||'helloworld') => {
         const mt = chee.random.mt.new(cipher);
         const shuffledOrder = chee.random.mt.shuffle(chee.crypto.caesar.order, mt);
         const result = [];
@@ -142,7 +152,7 @@ const chee = {"config":undefined,"valid":{"capitalize":function(str) {
           shuffledOrder.push(shuffledOrder.shift());
         }
         return result.join('');
-      },"decryp":(text, cipher=chee.SECRET_KEY) => {
+      },"decryp":(text, cipher=chee.SECRET_KEY||'helloworld') => {
         const mt = chee.random.mt.new(cipher);
         const shuffledOrder = chee.random.mt.shuffle(chee.crypto.caesar.order, mt);
         const result = [];
@@ -177,11 +187,8 @@ const chee = {"config":undefined,"valid":{"capitalize":function(str) {
     }
     g.x = seed;
     return g;
-  },"mt":{"new":(seed=undefined) => {
-      if (seed === undefined) seed = Math.random() * 1000;
-      return chee.modules.MersenneTwister(seed);
-    },"choices":(_array, amount=1, mt) => {
-      if (!mt) mt = chee.modules.MersenneTwister();
+  },"mt":{"new":(seed) => chee.modules.MT(seed),"choices":(_array, amount=1, mt) => {
+      if (!mt) mt = chee.modules.MT();
       const result = [];
       let array = [];
       for (let i = 0; i < amount; i++) {
@@ -191,13 +198,21 @@ const chee = {"config":undefined,"valid":{"capitalize":function(str) {
       };
       return result;
     },"choice":(array, mt) => {
-      if (!mt) mt = chee.modules.MersenneTwister();
+      if (!mt) mt = chee.modules.MT();
       return array[Math.floor(mt.random()*array.length)];
     },"shuffle":(array, mt) => {
-      if (!mt) mt = chee.modules.MersenneTwister();
+      if (!mt) mt = chee.modules.MT();
       return chee.random.mt.choices(array, array.length, mt);
-    }}},"modules":{"MersenneTwister":function MersenneTwister(seed) {
-    if (seed === undefined) seed = new Date().getTime();
+    }}},"modules":{"MT":function MersenneTwister(seed) {
+    if (seed === undefined) {
+      seed = new Date().getTime();
+    } else if (typeof seed !== 'number') {
+      if (Number.isNaN(+seed)) {
+        seed = chee.base.b64toB10_(atob(onlyAsciiChars(seed.toString())));
+      } else {
+        seed = +seed;
+      }
+    }
     this.seed = seed;
     this.N = 624;
     this.M = 397;
