@@ -208,7 +208,7 @@ const chee = {"config":undefined,"valid":{"capitalize":function(str) {
       seed = new Date().getTime();
     } else if (typeof seed !== 'number') {
       if (Number.isNaN(+seed)) {
-        seed = chee.base.b64toB10_(atob(onlyAsciiChars(seed.toString())));
+        seed = chee.base.b64toB10_(atob(chee.base.onlyAsciiChars(seed.toString())));
       } else {
         seed = +seed;
       }
