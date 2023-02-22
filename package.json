@@ -1,10 +1,10 @@
 {
   "name": "@cch137/chee",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "``` npm init --scope=cch137 npm set registry https://registry.npmjs.org/",
   "main": "index.js",
   "scripts": {
-    "test": "node ."
+    "test": "nodemon ./test"
   },
   "repository": {
     "type": "git",
@@ -18,9 +18,5 @@
   "bugs": {
     "url": "https://github.com/cch137/chee/issues"
   },
-  "homepage": "https://github.com/cch137/chee#readme",
-  "dependencies": {
-    "crypto": "^1.0.1",
-    "mersenne-twister": "^1.1.0"
-  }
+  "homepage": "https://github.com/cch137/chee#readme"
 }
