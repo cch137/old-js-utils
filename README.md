@@ -2,7 +2,6 @@
 
 ```
 npm init --scope=cch137
-npm set registry https://registry.npmjs.org/
 
 ```
 

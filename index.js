@@ -1,23 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-
-
 const isArray = (arg) => Array.isArray(arg);
 
-let CONFIG_PATH;
-
 const chee = {
-  SECRET_KEY: 'https://github.com/cch137/chee',
-  get CONFIG_PATH() {
-    return CONFIG_PATH;
-  },
-  set CONFIG_PATH(v) {
-    CONFIG_PATH = v;
-    chee.config = require(v);
-    chee.saveConfig = () => {
-      fs.writeFileSync(CONFIG_PATH, JSON.stringify(chee.config, null, 4), {encoding: 'utf8'});
-    }
-  }
+  SECRET_KEY: 'https://github.com/cch137/chee'
 };
 
 class Cookies {
@@ -396,30 +380,6 @@ chee.range = (a=null, b=null, c=null) => {
   return numbers;
 };
 
-chee.walkdir = (_dir, type=1) => {
-  _dir = path.resolve(_dir);
-  const filepathList = [];
-  for (const f of fs.readdirSync(_dir)) {
-    const itemPath = path.join(_dir, f);
-    const isDir = fs.statSync(itemPath).isDirectory();
-    switch (type) {
-      case 1: // files only
-        if (isDir) filepathList.push(...chee.walkdir(itemPath));
-        else filepathList.push(itemPath);
-        break;
-      case 0: // files and dirs
-        if (isDir) filepathList.push(...chee.walkdir(itemPath));
-        filepathList.push(itemPath);
-        break;
-      case 2: // dirs only
-        if (isDir) filepathList.push(itemPath);
-        else continue;
-        break;
-    }
-  };
-  return filepathList;
-};
-
 chee.trimObj = (obj) => {
   if (isArray(obj)) {
     for (let i = 0; i < obj.length; i++) if (typeof obj === 'object') obj[i] = trimObj(obj[i]);
@@ -674,24 +634,5 @@ chee.crypto = (() => {
     }
   };
 })();
-
-chee.frontendPack = () => {
-  return {
-    config: chee.config,
-    valid: chee.valid,
-    isArray: chee.isArray,
-    isIterable: chee.isIterable,
-    unique: chee.unique,
-    range: chee.range,
-    time: chee.time,
-    escapeString: chee.escapeString,
-    trimObj: chee.trimObj,
-    base: chee.base,
-    crypto: chee.crypto,
-    random: chee.random,
-    modules: chee.modules,
-    formatBytes: chee.formatBytes,
-  }
-}
 
 module.exports = chee;
