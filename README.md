@@ -1,6 +1,12 @@
 # cch137
 
 ```
+npm uninstall @cch137/chee
+npm i @cch137/chee
+
+```
+
+```
 npm init --scope=cch137
 
 ```
