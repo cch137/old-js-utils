@@ -368,7 +368,9 @@ chee.valid = {
 
 chee.unique = (arr) => [...new Set(arr)];
 
-chee.isIterable = (obj) => typeof obj[Symbol.iterator] === 'function';
+chee.isIterable = function(obj) {
+  return typeof obj[Symbol.iterator] === 'function';
+}
 
 chee.isArray = isArray;
 
