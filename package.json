@@ -1,6 +1,6 @@
 {
   "name": "@cch137/chee",
-  "version": "1.0.19",
+  "version": "1.1.0",
   "description": "``` npm init --scope=cch137 npm set registry https://registry.npmjs.org/",
   "main": "index.js",
   "scripts": {
@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/cch137/chee/issues"
   },
-  "homepage": "https://github.com/cch137/chee#readme"
+  "homepage": "https://github.com/cch137/chee#readme",
+  "devDependencies": {
+    "@types/node": "^18.14.6"
+  }
 }
