@@ -8,7 +8,6 @@ class MersenneTwister {
   MATRIX_A = 0x9908b0df;
   UPPER_MASK = 0x80000000;
   LOWER_MASK = 0x7fffffff;
-  seed = seed;
   mt = new Array(this.N);
   mti = this.N + 1;
 
@@ -20,6 +19,7 @@ class MersenneTwister {
       if (Number.isNaN(+seed)) seed = baseConverter.b64w_b10(atob(validations.filterAsciiChars(seed.toString())));
       else seed = +seed;
     }
+    this.seed = seed;
     if (Array.isArray(seed)) this.init_by_array(seed, seed.length);
     else this.init_seed(seed);
     return this;
