@@ -1,11 +1,11 @@
 const chee = require('../');
-const { MT } = require('../random').mt;
+const { MT, shuffle } = require('../random').mt;
 const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_`~!@#$%^&*()=+\t[{]}|\\:;"\'<,>.?/ \n';
 
 const caesar = {
   encryp: (text, cipher=chee.SECRET_KEY||'helloworld') => {
     const mt = MT(cipher);
-    const shuffledOrder = MT.shuffle(charset, mt);
+    const shuffledOrder = shuffle(charset, mt);
     const result = [];
     for (const i of text.split('')) {
       const k = charset.indexOf(i);
@@ -16,7 +16,7 @@ const caesar = {
   },
   decryp: (text, cipher=chee.SECRET_KEY||'helloworld') => {
     const mt = MT(cipher);
-    const shuffledOrder = MT.shuffle(charset, mt);
+    const shuffledOrder = shuffle(charset, mt);
     const result = [];
     for (const i of text.split('')) {
       const k = shuffledOrder.indexOf(i);
