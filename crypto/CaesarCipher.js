@@ -23,7 +23,7 @@ const caesar = {
       }
       finalResult = result;
     });
-    return result.join('');
+    return finalResult.join('');
   },
   /**
    * @param {String} text 
@@ -45,7 +45,7 @@ const caesar = {
       }
       finalResult = result;
     });
-    return result.join('');
+    return finalResult.join('');
   }
 }
 
