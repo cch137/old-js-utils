@@ -1,4 +1,4 @@
-# cch137
+# @cch137/chee
 
 ```
 npm uninstall @cch137/chee
