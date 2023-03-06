@@ -2,6 +2,7 @@ const isArray = (arg) => Array.isArray(arg);
 
 const chee = {
   SECRET_KEY: 'HelloWorldCCH137',
+  assign: (tar, src) => Object.assign(tar, src),
   unique: (arr) => [...new Set(arr)],
   isIterable(obj) {
     try {
