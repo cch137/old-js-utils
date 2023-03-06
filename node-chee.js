@@ -8,7 +8,7 @@ let CONFIG_PATH;
 
 const chee = {
   ...basic,
-  config,
+  config: {},
   get CONFIG_PATH() { return CONFIG_PATH },
   set CONFIG_PATH(newValue) {
     CONFIG_PATH = newValue;
