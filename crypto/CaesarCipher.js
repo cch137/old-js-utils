@@ -4,7 +4,7 @@ const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-
 
 const caesar = {
   encryp: (text, cipher=chee.SECRET_KEY||'helloworld') => {
-    const mt = MT.new(cipher);
+    const mt = MT(cipher);
     const shuffledOrder = MT.shuffle(charset, mt);
     const result = [];
     for (const i of text.split('')) {
@@ -15,7 +15,7 @@ const caesar = {
     return result.join('');
   },
   decryp: (text, cipher=chee.SECRET_KEY||'helloworld') => {
-    const mt = MT.new(cipher);
+    const mt = MT(cipher);
     const shuffledOrder = MT.shuffle(charset, mt);
     const result = [];
     for (const i of text.split('')) {
