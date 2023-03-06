@@ -13,11 +13,12 @@ class MersenneTwister {
 
   /** @param {Number} [seed] */
   constructor(seed) {
-    if (arguments.length === 0) {
-      seed = new Date().getTime();
-    } else if (typeof seed !== 'number') {
-      if (Number.isNaN(+seed)) seed = baseConverter.b64w_b10(atob(validations.filterAsciiChars(seed.toString())));
-      else seed = +seed;
+    if (arguments.length === 0) seed = new Date().getTime();
+    if (typeof seed !== 'number') {
+      seed = parseFloat(seed);
+      if (seed === NaN) {
+        seed = baseConverter.b64w_b10(atob(validations.filterAsciiChars(`${seed}`)));
+      }
     }
     this.seed = seed;
     if (Array.isArray(seed)) this.init_by_array(seed, seed.length);
