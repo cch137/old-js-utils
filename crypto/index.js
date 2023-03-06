@@ -22,7 +22,7 @@ const generateShuffledIndexes = (MT, len) => {
 
 const crypto = {
   md5, sha256,
-  en: (string) => {
+  e: (string) => {
     if (typeof string != 'string') string = string.toString();
     const seed1 = Math.round(new Date().getTime() * Math.random() / 137 / 137 / 137);
     const MT1 = MT(seed1);
@@ -35,7 +35,7 @@ const crypto = {
     result.splice(Math.floor((result.length + 1) / 3), 0, seed1);
     return result;
   },
-  de: (crypData) => {
+  d: (crypData) => {
     const seed1 = crypData.splice(Math.floor(crypData.length / 3), 1)[0];
     const MT1 = MT(seed1);
     const seed2 = generateNewSeed(seed1, MT1) * 1114111;

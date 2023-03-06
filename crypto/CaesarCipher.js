@@ -3,7 +3,7 @@ const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-
 
 const caesar = {
   /** @param {String} text @param  {...Number} ciphers */
-  encryp: (text, ...ciphers) => {
+  e: (text, ...ciphers) => {
     ciphers = ciphers.flat();
     /** @type {undefined|String[]} */
     let finalResult;
@@ -22,7 +22,7 @@ const caesar = {
     return finalResult.join('');
   },
   /** @param {String} text @param  {...Number} ciphers */
-  decryp: (text, ...ciphers) => {
+  d: (text, ...ciphers) => {
     ciphers = ciphers.flat().reverse();
     /** @type {undefined|String[]} */
     let finalResult;
