@@ -1,5 +1,5 @@
 const chee = require('../');
-const MT = require('../random').mt;
+const { MT } = require('../random').mt;
 const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_`~!@#$%^&*()=+\t[{]}|\\:;"\'<,>.?/ \n';
 
 const caesar = {
