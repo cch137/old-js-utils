@@ -1,7 +1,6 @@
 const isArray = (arg) => Array.isArray(arg);
 
 const chee = {
-  SECRET_KEY: 'HelloWorldCCH137',
   assign: (tar, src) => Object.assign(tar, src),
   unique: (arr) => [...new Set(arr)],
   isIterable(obj) {
@@ -42,7 +41,8 @@ const chee = {
   formatBytes(fileSizeByte=0, toFix=2, spaceBfrUnit=true) {
     const d = parseInt(Math.log(fileSizeByte) / Math.log(1024)) || 0;
     return `${(fileSizeByte/Math.pow(1024, d>5?5:d)).toFixed(toFix)}${spaceBfrUnit?' ':''}${['','K','M','G','T','P'][d>5?5:d]}B`;
-  }
+  },
+  SECRET_KEY: 'HelloWorldCCH137'
 };
 
 module.exports = chee;
