@@ -14,7 +14,7 @@ const chee = {
   /** @param {Number} a @param {Number} [b] @param {Number} [c] */
   range(a, b, c) {
     const numbers = [];
-    switch (isArgumentsObject.length) {
+    switch (arguments.length) {
       case 1:
         for (let i = 0; i < a; i++) numbers.push(i);
         break;
