@@ -5,6 +5,16 @@ const chee = {
   unique: (arr) => [...new Set(arr)],
   isIterable: (obj) => typeof obj[Symbol?.iterator] === 'function',
   isArray,
+  /** @param {Number|Number[]} numbers */
+  sum: (...numbers) => {
+    numbers = numbers.flat();
+    return numbers.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  },
+  /** @param {Number|Number[]} numbers */
+  avg: (...numbers) => {
+    numbers = numbers.flat();
+    return chee.sum(numbers) / numbers.length;
+  },
   /** @param {Number} a @param {Number} [b] @param {Number} [c] */
   range(a, b, c) {
     const numbers = [];
