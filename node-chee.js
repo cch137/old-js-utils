@@ -75,6 +75,9 @@ const chee = {
       fs.mkdirSync(dirname, { recursive: true });
     }
   },
+  safelyRm: (dirname) => {
+    fs.rmSync(dirname, { recursive: true, force: true });
+  },
   /**
    * To execute a system command
    * @param {String} command 
