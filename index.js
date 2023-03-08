@@ -36,7 +36,7 @@ const chee = {
     const d = parseInt(Math.log(fileSizeByte) / Math.log(1024)) || 0;
     return `${(fileSizeByte/Math.pow(1024, d>5?5:d)).toFixed(toFix)}${spaceBfrUnit?' ':''}${['','K','M','G','T','P'][d>5?5:d]}B`;
   },
-  '\u0053\u0045\u0043\u0052\u0045\u0054\u005f\u004b\u0045\u0059': '\u0048\u0065\u006c\u006c\u006f\u0057\u006f\u0072\u006c\u0064\u0043\u0043\u0048\u0031\u0033\u0037'
+  SECRET_KEY: '#31|02u()27I>'
 };
 
 module.exports = chee;
