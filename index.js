@@ -3,13 +3,7 @@ const isArray = (arg) => Array.isArray(arg);
 const chee = {
   assign: (tar, src) => Object.assign(tar, src),
   unique: (arr) => [...new Set(arr)],
-  isIterable(obj) {
-    try {
-      return typeof obj[Symbol.iterator] === 'function';
-    } catch {
-      return false;
-    }
-  },
+  isIterable: (obj) => typeof obj[Symbol?.iterator] === 'function',
   isArray,
   /** @param {Number} a @param {Number} [b] @param {Number} [c] */
   range(a, b, c) {
