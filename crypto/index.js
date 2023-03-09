@@ -1,10 +1,11 @@
 const MT = require('../random/MT');
 const md5 = require('./md5');
 const sha256 = require('./sha256');
+const { b10_b64, b64_b10 } = require('../baseConverter');
 
 
-const generateNewSeed = (motherSeed, MT) => {
-  const seedGeneratorMT = MT(MT.random()), _ = motherSeed % 3;
+const generateNewSeed = (motherSeed, mt) => {
+  const seedGeneratorMT = MT(mt.random()), _ = motherSeed % 3;
   let i = 0;
   while (i++ < _) seedGeneratorMT.random();
   return seedGeneratorMT.random();
@@ -22,28 +23,28 @@ const generateShuffledIndexes = (MT, len) => {
 
 const crypto = {
   md5, sha256,
-  e: (string) => {
-    if (typeof string != 'string') string = string.toString();
+  e: (str) => {
+    if (typeof str != 'string') str = str.toString();
     const seed1 = Math.round(new Date().getTime() * Math.random() / 137 / 137 / 137);
     const MT1 = MT(seed1);
     const seed2 = generateNewSeed(seed1, MT1) * 1114111;
     const MT2 = MT(seed2);
-    const crypMaterial1 = Array.from(string, _ => Math.round(MT1.random() * 1114111));
-    const crypMaterial2 = generateShuffledIndexes(MT2, string.length);
-    const crypData = Array.from(string, _ => _.charCodeAt(0) + crypMaterial1.pop());
+    const crypMaterial1 = Array.from(str, _ => Math.round(MT1.random() * 1114111));
+    const crypMaterial2 = generateShuffledIndexes(MT2, str.length);
+    const crypData = Array.from(str, _ => _.charCodeAt(0) + crypMaterial1.pop());
     const result = Array.from(crypMaterial2, i => crypData[i]);
     result.splice(Math.floor((result.length + 1) / 3), 0, seed1);
-    return result;
+    return result.map(r => b10_b64(r)).join('-');
   },
-  d: (crypData) => {
-    const seed1 = crypData.splice(Math.floor(crypData.length / 3), 1)[0];
+  d: (str) => {
+    const seed1 = str.split('-').map(d => +b64_b10(d)).splice(Math.floor(str.length / 3), 1)[0];
     const MT1 = MT(seed1);
     const seed2 = generateNewSeed(seed1, MT1) * 1114111;
     const MT2 = MT(seed2);
-    const crypMaterial1 = Array.from(crypData, _ => Math.round(MT1.random() * 1114111));
-    const crypMaterial2 = generateShuffledIndexes(MT2, crypData.length);
-    const result = Array.from(crypData, _ => null);
-    for (const i of crypMaterial2) result[i] = crypData.shift();
+    const crypMaterial1 = Array.from(str, _ => Math.round(MT1.random() * 1114111));
+    const crypMaterial2 = generateShuffledIndexes(MT2, str.length);
+    const result = Array.from(str, _ => null);
+    for (const i of crypMaterial2) result[i] = str.shift();
     return Array.from(result, _ => String.fromCharCode(_ - crypMaterial1.pop())).join('');
   },
 };

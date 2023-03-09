@@ -6,18 +6,20 @@ BASE62_CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
 BASE64_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
 BASE64WEB_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
+const smallBases = new Set(['2', '10', '16', '36', 2, 10, 16, 36]);
+
 /** @param {Number|String} radix */
 const getCharset = (radix) => {
-  if (typeof radix != 'string') `${radix}`;
+  if (typeof radix != 'string') radix = `${radix}`.toLowerCase();
   switch (radix) {
     case '2': return BASE2_CHARSET;
+    case '10': return BASE10_CHARSET;
     case '16': return BASE16_CHARSET;
     case '36': return BASE36_CHARSET;
     case '62': return BASE62_CHARSET;
     case '64': return BASE64_CHARSET;
-    case '64WEB': case '64Web':
-    case '64W': case '64w': return BASE64_CHARSET;
-    default: return BASE10_CHARSET;
+    case '64web': case '64w': return BASE64WEB_CHARSET;
+    default: return radix;
   }
 }
 
@@ -31,23 +33,24 @@ const getCharset = (radix) => {
 const convert = (value, fromCharset, toCharset, minLen=0) => {
   if (typeof value !== 'string') value = `${value}`;
   let decimalValue = 0;
-  if (typeof fromCharset === 'number') {
+  if (smallBases.has(fromCharset)) {
     if (fromCharset < 37) decimalValue = parseInt(value, fromCharset);
-    else fromCharset = getCharset(fromCharset);
-  } else {
+  }
+  if (!decimalValue) {
+    fromCharset = getCharset(fromCharset);
     const baseFrom = fromCharset.length;
     for (let i = 0; i < value.length; i++) {
       decimalValue += fromCharset.indexOf(value[i]) * Math.pow(baseFrom, value.length - 1 - i);
     }
   }
   let result = '';
-  if (typeof toCharset === 'number') {
+  if (smallBases.has(toCharset)) {
     if (toCharset < 37) {
       result = decimalValue.toString(toCharset);
       if (minLen <= 1) return result;
     }
-    toCharset = getCharset(toCharset);
   }
+  toCharset = getCharset(toCharset);
   if (!result) {
     const baseTo = toCharset.length;
     while (decimalValue > 0) {
