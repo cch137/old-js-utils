@@ -61,13 +61,11 @@ const validations = {
 
   /** @param {String} str */
   filterAsciiChars(str) {
-    let asciiStr = '';
+    const asciiStr = [];
     for (let i = 0; i < str.length; i++) {
-      if (str.charCodeAt(i) <= 127) {
-        asciiStr += str.charAt(i);
-      }
+      if (str.charCodeAt(i) < 128) asciiStr.push(str.charAt(i));
     }
-    return asciiStr;
+    return asciiStr.join('');
   },
 
   /** @param {String} url */

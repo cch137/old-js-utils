@@ -31,6 +31,9 @@ const chee = {
     }
     return numbers;
   },
+  str: (v) => `${v}`,
+  lower: (s) => `${s}`.toLowerCase(),
+  upper: (s) => `${s}`.toUpperCase(),
   trimObj(obj) {
     if (isArray(obj)) {
       for (let i = 0; i < obj.length; i++) if (typeof obj === 'object') obj[i] = trimObj(obj[i]);
@@ -40,6 +43,17 @@ const chee = {
       }
     }
     return obj;
+  },
+  safeStringify: (obj) => {
+    const loadedObj = new Set();
+    const reviver = (key, value) => {
+      if (typeof value === "object" && value !== null) {
+        if (loadedObj.has(value)) return undefined;
+        loadedObj.add(value);
+      }
+      return value;
+    };
+    return JSON.stringify(obj, reviver);
   },
   SECRET_KEY: '#31|02u()27I>',
   escapeString: (str) => JSON.stringify(str).slice(1, -1),
