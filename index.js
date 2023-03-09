@@ -1,5 +1,5 @@
 const isArray = (arg) => Array.isArray(arg);
-
+const isIterable = (obj) => typeof obj[Symbol?.iterator] === 'function';
 
 const ceil = (num, digits=0) => Math.ceil(num * (10 ** digits)) / (10 ** digits);
 const round = (num, digits=0) => Math.round(num * (10 ** digits)) / (10 ** digits);
@@ -8,7 +8,7 @@ const floor = (num, digits=0) => Math.floor(num * (10 ** digits)) / (10 ** digit
 const chee = {
   assign: (tar, src) => Object.assign(tar, src),
   unique: (arr) => [...new Set(arr)],
-  isIterable: (obj) => typeof obj[Symbol?.iterator] === 'function',
+  isIterable,
   isArray,
   /** @param {Number|Number[]} numbers */
   sum: (...numbers) => {
@@ -50,12 +50,13 @@ const chee = {
     }
     return obj;
   },
-  safeStringify: (obj) => {
+  safeStringify(obj) {
     const loadedObj = new Set();
     const reviver = (key, value) => {
       if (typeof value === "object" && value !== null) {
         if (loadedObj.has(value)) return undefined;
         loadedObj.add(value);
+        if (isIterable(value)) value = [...value];
       }
       return value;
     };
