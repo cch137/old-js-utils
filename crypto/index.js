@@ -1,4 +1,4 @@
-const MT = require('../random/MersenneTwister');
+const MT = require('../random/MT');
 const md5 = require('./md5');
 const sha256 = require('./sha256');
 
