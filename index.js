@@ -1,5 +1,10 @@
 const isArray = (arg) => Array.isArray(arg);
 
+
+const ceil = (num, digits=0) => Math.ceil(num * (10 ** digits)) / (10 ** digits);
+const round = (num, digits=0) => Math.round(num * (10 ** digits)) / (10 ** digits);
+const floor = (num, digits=0) => Math.floor(num * (10 ** digits)) / (10 ** digits);
+
 const chee = {
   assign: (tar, src) => Object.assign(tar, src),
   unique: (arr) => [...new Set(arr)],
@@ -34,6 +39,7 @@ const chee = {
   str: (v) => `${v}`,
   lower: (s) => `${s}`.toLowerCase(),
   upper: (s) => `${s}`.toUpperCase(),
+  ceil, round, floor,
   trimObj(obj) {
     if (isArray(obj)) {
       for (let i = 0; i < obj.length; i++) if (typeof obj === 'object') obj[i] = trimObj(obj[i]);
