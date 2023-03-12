@@ -10,6 +10,8 @@ const chee = {
   unique: (arr) => [...new Set(arr)],
   isIterable,
   isArray,
+  toArray: (value) => isIterable(value) ? [...value] : [value],
+  packArray: (value) => (isIterable(value) && typeof value !== 'string') ? [...value] : [value],
   /** @param {Number|Number[]} numbers */
   sum: (...numbers) => {
     numbers = numbers.flat();
