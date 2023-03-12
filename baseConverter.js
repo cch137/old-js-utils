@@ -34,7 +34,8 @@ const convert = (value, fromCharset, toCharset, minLen=0) => {
   if (typeof value !== 'string') value = `${value}`;
   let decimalValue = 0;
   if (smallBases.has(fromCharset)) {
-    if (fromCharset < 37) decimalValue = parseInt(value, fromCharset);
+    if (fromCharset == 10) decimalValue = +new Number(value);
+    else if (fromCharset < 37) decimalValue = parseInt(value, fromCharset);
   }
   if (!decimalValue) {
     fromCharset = getCharset(fromCharset);
