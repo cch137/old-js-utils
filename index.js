@@ -1,9 +1,20 @@
 const isArray = (arg) => Array.isArray(arg);
 const isIterable = (obj) => typeof obj[Symbol?.iterator] === 'function';
 
-const ceil = (num, digits=0) => Math.ceil(num * (10 ** digits)) / (10 ** digits);
-const round = (num, digits=0) => Math.round(num * (10 ** digits)) / (10 ** digits);
-const floor = (num, digits=0) => Math.floor(num * (10 ** digits)) / (10 ** digits);
+const ceil = (num, digits=0) => {
+  digits = digits ** 10;
+  return Math.ceil(num * digits) / digits;
+}
+
+const round = (num, digits=0) => {
+  digits = digits ** 10;
+  return Math.round(num * digits) / digits;
+}
+
+const floor = (num, digits=0) => {
+  digits = digits ** 10;
+  return Math.floor(num * digits) / digits;
+}
 
 const chee = {
   assign: (tar, src) => Object.assign(tar, src),
