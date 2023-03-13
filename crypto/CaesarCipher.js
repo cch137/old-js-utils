@@ -1,4 +1,6 @@
-const { MT, shuffle } = require('../random').mt;
+const { MT, shuffle } = require('../random');
+
+
 const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_`~!@#$%^&*()=+\t[{]}|\\:;"\'<,>.?/ \n';
 
 const caesar = {
