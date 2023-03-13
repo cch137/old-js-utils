@@ -37,7 +37,8 @@ const crypto = {
     return result.map(r => b10_b64(r)).join('-');
   },
   d: (str) => {
-    const seed1 = str.split('-').map(d => +b64_b10(d)).splice(Math.floor(str.length / 3), 1)[0];
+    str = str.split('-').map(d => +b64_b10(d));
+    const seed1 = str.splice(Math.floor(str.length / 3), 1)[0];
     const MT1 = MT(seed1);
     const seed2 = generateNewSeed(seed1, MT1) * 1114111;
     const MT2 = MT(seed2);
