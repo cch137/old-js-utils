@@ -1,5 +1,11 @@
 const isArray = (arg) => Array.isArray(arg);
-const isIterable = (obj) => typeof obj[Symbol?.iterator] === 'function';
+const isIterable = (obj) => {
+  try {
+    return  typeof obj[Symbol?.iterator] === 'function';
+  } catch {
+    return false;
+  }
+}
 
 const ceil = (num, digits=0) => {
   digits = digits ** 10;
