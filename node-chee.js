@@ -2,21 +2,18 @@ const fs = require('fs');
 const path = require('path');
 const basic = require('./');
 const { execSync } = require('child_process');
+const JSONHandler = require('./jsonHandler');
 
 
 let CONFIG_PATH;
+const configHandler = new JSONHandler(CONFIG_PATH);
 
 const chee = {
   ...basic,
-  config: {},
-  get CONFIG_PATH() { return CONFIG_PATH },
-  set CONFIG_PATH(newValue) {
-    CONFIG_PATH = newValue;
-    chee.config = require(newValue);
-    chee.saveConfig = () => {
-      fs.writeFileSync(CONFIG_PATH, JSON.stringify(chee.config, null, 4), {encoding: 'utf8'});
-    }
-  },
+  configHandler,
+  get config() {return configHandler.data},
+  get CONFIG_PATH() {return configHandler.filepath},
+  set CONFIG_PATH(newValue) {return configHandler.filepath = newValue},
   walkdir: (_dir, type=1) => {
     _dir = path.resolve(_dir);
     const filepathList = [];
