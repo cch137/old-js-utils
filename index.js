@@ -58,6 +58,7 @@ const chee = {
   str: (v) => `${v}`,
   lower: (s) => `${s}`.toLowerCase(),
   upper: (s) => `${s}`.toUpperCase(),
+  capitalize: (s) => `${chee.upper(s[0])}${s.substring(1)}`,
   ceil, round, floor,
   trimObj(obj) {
     if (isArray(obj)) {
