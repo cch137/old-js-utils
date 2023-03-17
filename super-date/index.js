@@ -10,11 +10,13 @@ const MS_1Week    = 07 * MS_1Day;
 const EPOCH_DATE  = '1970-01-01';
 const DATE_REGEX  = /^(0{0,}[0-9]{1,})(?:-(0?[1-9]|1[012]))(?:-(0[1-9]|[12][0-9]|3[01]))$/;
 const TIME_REGEX  = /^([01]?\d|[0-3]):([0-5]?\d)(?::([0-5]?\d)(?:\.(\d{0,}))?)?$/;
+// const DEMO_DATE   = new Date();
 
 /**
  * @param {SuperDate} date
  */
-const correction = (date) => date.addMs(date.getTimezoneOffset() * MS_1Min);
+// const correction = date => date.addMs(DEMO_DATE.getTimezoneOffset() * MS_1Min);
+const correction = date => date;
 
 /**
   * `SuperDate` extends the native `Date` object in JavaScript,
