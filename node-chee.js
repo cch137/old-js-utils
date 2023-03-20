@@ -2,18 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const basic = require('./');
 const { execSync } = require('child_process');
-const JSONHandler = require('./jsonHandler');
 
-
-let CONFIG_PATH;
-const configHandler = new JSONHandler(CONFIG_PATH);
 
 const chee = {
   ...basic,
-  configHandler,
-  get config() {return configHandler.data},
-  get CONFIG_PATH() {return configHandler.filepath},
-  set CONFIG_PATH(newValue) {return configHandler.filepath = newValue},
   walkdir: (_dir, type=1) => {
     _dir = path.resolve(_dir);
     const filepathList = [];
