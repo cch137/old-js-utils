@@ -14,9 +14,13 @@ const testStringFormat = (str, minLen, maxLen, regexp, name='item', throwInvalid
   const result = str.match(regexp);
   if (result != null) return true;
   if (!throwInvalidChars) throw `${_name} does not conform to the format.`;
-  const negatedRegex = new RegExp('[^' + regexp.source.slice(1, -1) + ']', 'g');
-  const invalidChars = [...new Set([...str.match(negatedRegex)])];
-  throw `The ${name} cannot contain the following characters:\n${invalidChars.join(', ')}`;
+  try {
+    const negatedRegex = new RegExp('[^' + regexp.source.slice(2, -3) + ']', 'g');
+    const invalidChars = [...new Set([...str.match(negatedRegex)])];
+    throw `The ${name} cannot contain the following characters:\n${JSON.stringify(invalidChars).slice(1, -1)}`;
+  } catch {
+    throw `${_name} does not conform to the format.`;
+  }
 }
 
 /**
@@ -36,7 +40,7 @@ const validations = {
   capitalize: (str) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`,
 
   /** @param {String} str */
-  testEmail: (str) => testStringFormat(String(str).toLowerCase(), 5, 320, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'email address', false),
+  testEmail: (str) => testStringFormat(`${str}`.toLowerCase(), 5, 320, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'email address', false),
 
   /** @param {String} str */
   testUsername: (str) => testStringFormat(str, 5, 32, /^[a-zA-Z0-9_]+$/, 'username'),
