@@ -17,10 +17,11 @@ const testStringFormat = (str, minLen, maxLen, regexp, name='item', throwInvalid
   try {
     const negatedRegex = new RegExp('[^' + regexp.source.slice(2, -3) + ']', 'g');
     const invalidChars = [...new Set([...str.match(negatedRegex)])];
-    throw `The ${name} cannot contain the following characters:\n${JSON.stringify(invalidChars).slice(1, -1)}`;
+    str = `The ${name} cannot contain the following characters:\n${JSON.stringify(invalidChars).slice(1, -1)}`;
   } catch {
-    throw `${_name} does not conform to the format.`;
+    str = `${_name} does not conform to the format.`;
   }
+  throw str;
 }
 
 /**
