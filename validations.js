@@ -41,7 +41,7 @@ const validations = {
   capitalize: (str) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`,
 
   /** @param {String} str */
-  testEmail: (str) => testStringFormat(`${str}`.toLowerCase(), 5, 320, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'email address', false),
+  testEmailAddress: (str) => testStringFormat(`${str}`.toLowerCase(), 5, 320, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'email address', false),
 
   /** @param {String} str */
   testUsername: (str) => testStringFormat(str, 5, 32, /^[a-zA-Z0-9_]+$/, 'username'),
@@ -53,7 +53,7 @@ const validations = {
   testBase64: (str, minLen=0, maxLen='') => new RegExp(`^[A-Za-z0-9\\-\\_]{${minLen},${maxLen}}$`).test(str),
 
   /** @param {String} str */
-  isEmail: (str) => isStringFormat(str, validations.testEmail),
+  isEmailAddress: (str) => isStringFormat(str, validations.testEmailAddress),
 
   /** @param {String} str */
   isUsername: (str) => isStringFormat(str, validations.testUsername),
