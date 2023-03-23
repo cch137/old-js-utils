@@ -312,6 +312,24 @@ SuperDate.prototype.isEqualOrBefore = function(date) {return Boolean(this <= $(d
 SuperDate.prototype.isEqualOrAfter = function(date) {return Boolean(this >= $(date))}
 
 /**
+ * Determines whether the current date is daytime.
+ * @returns {Boolean}
+ */
+SuperDate.prototype.isDay = function() {
+  const h = this.getHours();
+  return Boolean(h > 6 && h < 20);
+}
+
+/**
+ * Determines whether the current date is night.
+ * @returns {Boolean}
+ */
+SuperDate.prototype.isNight = function(date) {
+  const h = this.getHours();
+  return Boolean(h < 7 && h > 19);
+}
+
+/**
  * Gets the milliseconds of a Date, using local time.
  * @returns {Number}
  */
