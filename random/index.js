@@ -1,6 +1,7 @@
+const { range } = require('../');
 const MT = require('./MT');
 const toSeed = require('./toSeed');
-const { BASE10_CHARSET, BASE16_CHARSET, BASE64WEB_CHARSET } = require('../baseConverter');
+const { BASE10_CHARSET, BASE16_CHARSET, BASE64WEB_CHARSET,convert } = require('../baseConverter');
 
 
 const selfMT = MT();
@@ -20,6 +21,28 @@ const random = {
   base64: (len, mt) => random.charset(BASE64WEB_CHARSET, len, mt),
   choice: (array, mt) => array[randInt(0, array.length, mt)],
   shuffle: (array, mt) => random.choices(array, array.length, mt),
+  /** @param {String} string */
+  mask(string, charset=16, level=1) {
+    const seed = randInt(0, charset);
+    const result = [
+      convert(seed, 10, charset),
+      ...random.shuffle(range(string.length), MT(seed)).map(i => string[i])
+    ];
+    if (--level < 1) return result.join('');
+    return random.mask(result, charset, level);
+  },
+  /** @param {String} string */
+  unmask(string, charset=16, level=1) {
+    if (typeof string === 'string') string = string.split('');
+    const seed = +convert(string[0], charset, 10);
+    const characters = string.slice(1, string.length).reverse();
+    const len = characters.length;
+    const shuffleOrder = random.shuffle(range(len), MT(seed));
+    const result = Array.from({ length: len });
+    for (const i of shuffleOrder) result[i] = characters.pop();
+    if (--level < 1) return result.join('');
+    return random.unmask(result, charset, level);
+  },
   choices(array, amount=1, mt) {
     const result = [];
     const options = [];

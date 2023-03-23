@@ -1,7 +1,7 @@
 const MT = require('../random/MT');
 const md5 = require('./md5');
 const sha256 = require('./sha256');
-const { b10_b64, b64_b10 } = require('../baseConverter');
+const { convert } = require('../baseConverter');
 
 
 const generateNewSeed = (motherSeed, mt) => {
@@ -34,10 +34,10 @@ const crypto = {
     const crypData = Array.from(str, _ => _.charCodeAt(0) + crypMaterial1.pop());
     const result = Array.from(crypMaterial2, i => crypData[i]);
     result.splice(Math.floor((result.length + 1) / 3), 0, seed1);
-    return result.map(r => b10_b64(r)).join('-');
+    return result.map(r => convert(r, 10, 64)).join('-');
   },
   d: (str) => {
-    str = str.split('-').map(d => +b64_b10(d));
+    str = str.split('-').map(d => +convert(d, 64, 10));
     const seed1 = str.splice(Math.floor(str.length / 3), 1)[0];
     const MT1 = MT(seed1);
     const seed2 = generateNewSeed(seed1, MT1) * 1114111;
