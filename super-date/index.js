@@ -315,7 +315,7 @@ SuperDate.prototype.isEqualOrAfter = function(date) {return Boolean(this >= $(da
  * Determines whether the current date is daytime.
  * @returns {Boolean}
  */
-SuperDate.prototype.isDay = function() {
+SuperDate.prototype.isDaytime = function() {
   const h = this.getHours();
   return Boolean(h > 6 && h < 20);
 }
