@@ -21,7 +21,7 @@ const random = {
   base64: (len, mt) => random.charset(BASE64WEB_CHARSET, len, mt),
   choice: (array, mt) => array[randInt(0, array.length, mt)],
   shuffle: (array, mt) => random.choices(array, array.length, mt),
-  /** @param {String} string */
+  /** @param {String} string @returns {String} */
   mask(string, charset=16, level=1) {
     const seed = randInt(0, charset);
     const result = [
@@ -31,7 +31,7 @@ const random = {
     if (--level < 1) return result.join('');
     return random.mask(result, charset, level);
   },
-  /** @param {String} string */
+  /** @param {String} string @returns {String} */
   unmask(string, charset=16, level=1) {
     if (typeof string === 'string') string = string.split('');
     const seed = +convert(string[0], charset, 10);
