@@ -1,7 +1,8 @@
 const { range } = require('../');
 const MT = require('./MT');
 const toSeed = require('./toSeed');
-const { BASE10_CHARSET, BASE16_CHARSET, BASE64WEB_CHARSET,convert } = require('../baseConverter');
+const { BASE10_CHARSET, BASE16_CHARSET, BASE64WEB_CHARSET,
+  convert, getCharset } = require('../baseConverter');
 
 
 const selfMT = MT();
@@ -13,6 +14,13 @@ const randInt = (start, end, mt) => {
   return Math.floor(start + rand(mt) * end);
 };
 
+const maskingCharsetGenerator = (charset, mt) => {
+  return () => {
+    charset = random.shuffle(charset, mt);
+    return charset.join('');
+  }
+}
+
 const random = {
   rand, randInt,
   charset: (charset, len=8, mt) => new Array(len).fill(0).map(l => random.choice(charset, mt)).join(''),
@@ -23,23 +31,26 @@ const random = {
   shuffle: (array, mt) => random.choices(array, array.length, mt),
   /** @param {String} string @returns {String} */
   mask(string, charset=16, level=1) {
-    const seed = randInt(0, charset);
+    const realCharset = getCharset(charset);
+    const seed1 = randInt(0, charset);
+    const mt1 = MT(seed1);
+    const generator = maskingCharsetGenerator(realCharset, MT(randInt(0, 1000000, mt1)));
+    const characters = typeof string === 'string' ? string.split('') : string;
     const result = [
-      convert(seed, 10, charset),
-      ...random.shuffle(range(string.length), MT(seed)).map(i => string[i])
+      convert(seed1, 10, charset),
+      ...characters.map(char => generator()[realCharset.indexOf(char)])
     ];
     if (--level < 1) return result.join('');
     return random.mask(result, charset, level);
   },
   /** @param {String} string @returns {String} */
   unmask(string, charset=16, level=1) {
-    if (typeof string === 'string') string = string.split('');
+    const realCharset = getCharset(charset);
     const seed = +convert(string[0], charset, 10);
-    const characters = string.slice(1, string.length).reverse();
-    const len = characters.length;
-    const shuffleOrder = random.shuffle(range(len), MT(seed));
-    const result = Array.from({ length: len });
-    for (const i of shuffleOrder) result[i] = characters.pop();
+    const mt1 = MT(seed);
+    const generator = maskingCharsetGenerator(realCharset, MT(randInt(0, 1000000, mt1)));
+    const characters = (typeof string === 'string' ? string.split('') : string).slice(1, string.length);
+    const result = characters.map(char => realCharset[generator().indexOf(char)]);
     if (--level < 1) return result.join('');
     return random.unmask(result, charset, level);
   },

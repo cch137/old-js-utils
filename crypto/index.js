@@ -23,7 +23,7 @@ const generateShuffledIndexes = (MT, len) => {
 
 const crypto = {
   md5, sha256,
-  e: (str) => {
+  e: (str) => { // 加密
     if (typeof str != 'string') str = str.toString();
     const seed1 = Math.round(new Date().getTime() * Math.random() / 137 / 137 / 137);
     const MT1 = MT(seed1);
@@ -36,7 +36,7 @@ const crypto = {
     result.splice(Math.floor((result.length + 1) / 3), 0, seed1);
     return result.map(r => convert(r, 10, 64)).join('-');
   },
-  d: (str) => {
+  d: (str) => { // 解密
     str = str.split('-').map(d => +convert(d, 64, 10));
     const seed1 = str.splice(Math.floor(str.length / 3), 1)[0];
     const MT1 = MT(seed1);

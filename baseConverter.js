@@ -1,3 +1,6 @@
+const { str } = require(".");
+
+
 const BASE2_CHARSET = '01',
 BASE10_CHARSET = '0123456789',
 BASE16_CHARSET = '0123456789abcdef',
@@ -9,19 +12,19 @@ BASE64WEB_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 
 /** @param {Number|String} radix */
 const getCharset = (radix) => {
-  if (typeof radix != 'string') radix = `${radix}`.toLowerCase();
+  if (typeof radix !== 'string') radix = str(radix).toLowerCase();
   switch (radix) {
-    case 2:
+    case '2':
       return BASE2_CHARSET;
-    case 10:
+    case '10':
       return BASE10_CHARSET;
-    case 16:
+    case '16':
       return BASE16_CHARSET;
-    case 36:
+    case '36':
       return BASE36_CHARSET;
-    case 62:
+    case '62':
       return BASE62_CHARSET;
-    case 64:
+    case '64':
       return BASE64_CHARSET;
     case '64w':
     case '64+':
@@ -39,7 +42,7 @@ const getCharset = (radix) => {
  * @returns {String}
  */
 const convert = (value, fromCharset, toCharset, minLen=0) => {
-  if (typeof value !== 'string') value = `${value}`;
+  if (typeof value !== 'string') value = str(value);
   let decimalValue = 0;
   if (fromCharset == 10) decimalValue = +new Number(value);
   else if (fromCharset < 37) decimalValue = parseInt(value, fromCharset);
@@ -80,7 +83,7 @@ const textToBase64 = (text) => {
     output.push(BASE64_CHARSET[char4], BASE64_CHARSET[char5], BASE64_CHARSET[char6], BASE64_CHARSET[char7]);
   }
   const paddingLength = input.length % 3;
-  return output.join('').slice(0, output.length - paddingLength)
+  return output.join('').slice(0, 1 + output.length - paddingLength)
     + (paddingLength === 2 ? '==' : paddingLength === 1 ? '=' : '');
 }
 
@@ -99,12 +102,13 @@ const base64ToText = (str) => {
     if (char3 != 64) output.push(fromCharCode(((char2 & 15) << 4) | (char3 >> 2)));
     if (char4 != 64) output.push(fromCharCode(((char3 & 3) << 6) | char4));
   }
-  return output.join('');
+  return output.join('').replaceAll('\x00', '');
 }
 
 const baseConverter = {
   BASE2_CHARSET, BASE10_CHARSET, BASE16_CHARSET, BASE36_CHARSET, BASE62_CHARSET,
-  BASE64_CHARSET, BASE64WEB_CHARSET, convert, secureBase64, textToBase64, base64ToText
+  BASE64_CHARSET, BASE64WEB_CHARSET,
+  convert, getCharset, secureBase64, textToBase64, base64ToText
 }
 
 module.exports = baseConverter;
