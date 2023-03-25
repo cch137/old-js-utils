@@ -66,9 +66,45 @@ const convert = (value, fromCharset, toCharset, minLen=0) => {
   return (result || toCharset.charAt(0)).padStart(minLen, toCharset[0]);
 }
 
+const textToBase64 = (text) => {
+  /** @type {String[]} */
+  const input = text.split('').map(c => c.charCodeAt(0)), output = [];
+  let i = 0;
+  while (i < input.length) {
+    const [char1, char2=0, char3=0] = input.slice(i, i += 3);
+    const triplet = (char1 << 16) + (char2 << 8) + char3;
+    const char4 = triplet >> 18;
+    const char5 = (triplet >> 12) & 63;
+    const char6 = (triplet >> 6) & 63;
+    const char7 = triplet & 63;
+    output.push(BASE64_CHARSET[char4], BASE64_CHARSET[char5], BASE64_CHARSET[char6], BASE64_CHARSET[char7]);
+  }
+  const paddingLength = input.length % 3;
+  return output.join('').slice(0, output.length - paddingLength)
+    + (paddingLength === 2 ? '==' : paddingLength === 1 ? '=' : '');
+}
+
+const secureBase64RegEx = /[^A-Za-z0-9\+\/]/g
+const secureBase64 = (str) => str.replace(secureBase64RegEx, '');
+const fromCharCode = (str) => String.fromCharCode(str);
+
+/** @param {String[]} str */
+const base64ToText = (str) => {
+  /** @type {String[]} */
+  const input = secureBase64(str).split(''), output = [];
+  let i = 0;
+  while (i < input.length) {
+    const [char1, char2, char3, char4] = input.slice(i, i++ + (i += 3)).map(l => BASE64_CHARSET.indexOf(l));
+    output.push(fromCharCode((char1 << 2) | (char2 >> 4)));
+    if (char3 != 64) output.push(fromCharCode(((char2 & 15) << 4) | (char3 >> 2)));
+    if (char4 != 64) output.push(fromCharCode(((char3 & 3) << 6) | char4));
+  }
+  return output.join('');
+}
+
 const baseConverter = {
   BASE2_CHARSET, BASE10_CHARSET, BASE16_CHARSET, BASE36_CHARSET, BASE62_CHARSET,
-  BASE64_CHARSET, BASE64WEB_CHARSET, convert
+  BASE64_CHARSET, BASE64WEB_CHARSET, convert, secureBase64, textToBase64, base64ToText
 }
 
 module.exports = baseConverter;
