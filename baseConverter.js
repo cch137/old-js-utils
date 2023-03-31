@@ -97,7 +97,7 @@ const base64ToText = (str) => {
   const input = secureBase64(str).split(''), output = [];
   let i = 0;
   while (i < input.length) {
-    const [char1, char2, char3, char4] = input.slice(i, i++ + (i += 3)).map(l => BASE64_CHARSET.indexOf(l));
+    const [char1, char2, char3, char4] = input.slice(i, (i += 4)).map(l => BASE64_CHARSET.indexOf(l));
     output.push(fromCharCode((char1 << 2) | (char2 >> 4)));
     if (char3 != 64) output.push(fromCharCode(((char2 & 15) << 4) | (char3 >> 2)));
     if (char4 != 64) output.push(fromCharCode(((char3 & 3) << 6) | char4));
