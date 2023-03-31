@@ -6,7 +6,7 @@ const MS_1Sec     = 1e3;
 const MS_1Min     = 60 * MS_1Sec;
 const MS_1Hour    = 60 * MS_1Min;
 const MS_1Day     = 24 * MS_1Hour;
-const MS_1Week    = 07 * MS_1Day;
+const MS_1Week    = 7 * MS_1Day;
 const EPOCH_DATE  = '1970-01-01';
 const DATE_REGEX  = /^(0{0,}[0-9]{1,})(?:-(0?[1-9]|1[012]))(?:-(0[1-9]|[12][0-9]|3[01]))$/;
 const TIME_REGEX  = /^([01]?\d|[0-3]):([0-5]?\d)(?::([0-5]?\d)(?:\.(\d{0,}))?)?$/;
@@ -572,17 +572,8 @@ SuperDate.prototype.format = function (format='yyyy-MM-dd HH:mm:ss', isUTC=false
   const T = dateProperties.H < 12 ? 'AM' : 'PM', h = dateProperties.H % 12 || 12;
   return format
   .replace(/yyyy/g, dateProperties.y)
-  .replace(/yy/g, `${dateProperties.y}`.substr(2, 2))
+  .replace(/yy/g, `${dateProperties.y}`.substring(2, 4))
   .replace(/y/g, dateProperties.y)
-  .replace(/MMMM/g, ['January','February','March','April','May','June',
-  'July','August','September','October','November','December'][dateProperties.M - 1])
-  .replace(/MMM/g, ['Jan','Feb','Mar','Apr','May','Jun', 'Jul','Aug','Sep','Oct','Nov','Dec'][dateProperties.M - 1])
-  .replace(/MM/g, addLeadingZeros(dateProperties.M))
-  .replace(/M/g, dateProperties.M)
-  .replace(/dddd/g, ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dateProperties.w])
-  .replace(/ddd/g, ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dateProperties.w])
-  .replace(/dd/g, addLeadingZeros(dateProperties.d))
-  .replace(/d/g, dateProperties.d)
   .replace(/HH/g, addLeadingZeros(dateProperties.H))
   .replace(/H/g, dateProperties.H)
   .replace(/hh/g, addLeadingZeros(h))
@@ -595,7 +586,17 @@ SuperDate.prototype.format = function (format='yyyy-MM-dd HH:mm:ss', isUTC=false
   .replace(/ff/g, round(dateProperties.f / 10))
   .replace(/f/g, round(dateProperties.f / 100))
   .replace(/TT/gi, T)
-  .replace(/T/gi, T.charAt(0));
+  .replace(/T/gi, T.charAt(0))
+  .replace(/MMMM/g, ['January','February','March','April','May','June',
+    'July','August','September','October','November','December'][dateProperties.M - 1])
+  .replace(/MMM/g, ['Jan','Feb','Mar','Apr','May','Jun',
+    'Jul','Aug','Sep','Oct','Nov','Dec'][dateProperties.M - 1])
+  .replace(/^MM$/g, addLeadingZeros(dateProperties.M))
+  .replace(/^M$/g, dateProperties.M)
+  .replace(/dddd/g, ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dateProperties.w])
+  .replace(/ddd/g, ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dateProperties.w])
+  .replace(/^dd$/g, addLeadingZeros(dateProperties.d))
+  .replace(/^d$/g, dateProperties.d);
 }
 
 SuperDate.prototype.f = SuperDate.prototype.format;
