@@ -570,7 +570,7 @@ SuperDate.prototype.format = function (format='yyyy-MM-dd HH:mm:ss', isUTC=false
     s: this.getSeconds(), f: this.getMilliseconds()
   };
   const T = dateProperties.H < 12 ? 'AM' : 'PM', h = dateProperties.H % 12 || 12;
-  return format
+  format = format
   .replace(/yyyy/g, dateProperties.y)
   .replace(/yy/g, `${dateProperties.y}`.substring(2, 4))
   .replace(/y/g, dateProperties.y)
@@ -587,16 +587,19 @@ SuperDate.prototype.format = function (format='yyyy-MM-dd HH:mm:ss', isUTC=false
   .replace(/f/g, round(dateProperties.f / 100))
   .replace(/TT/gi, T)
   .replace(/T/gi, T.charAt(0))
+  .replace(/dddd/g, ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dateProperties.w])
+  .replace(/ddd/g, ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dateProperties.w])
+  .replace(/dd/g, addLeadingZeros(dateProperties.d))
+  .replace(/d/g, dateProperties.d);
+  isUTC = format;
+  format = format
   .replace(/MMMM/g, ['January','February','March','April','May','June',
     'July','August','September','October','November','December'][dateProperties.M - 1])
   .replace(/MMM/g, ['Jan','Feb','Mar','Apr','May','Jun',
-    'Jul','Aug','Sep','Oct','Nov','Dec'][dateProperties.M - 1])
-  .replace(/^MM$/g, addLeadingZeros(dateProperties.M))
-  .replace(/^M$/g, dateProperties.M)
-  .replace(/dddd/g, ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dateProperties.w])
-  .replace(/ddd/g, ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dateProperties.w])
-  .replace(/^dd$/g, addLeadingZeros(dateProperties.d))
-  .replace(/^d$/g, dateProperties.d);
+    'Jul','Aug','Sep','Oct','Nov','Dec'][dateProperties.M - 1]);
+  if (format !== isUTC) return format;
+  return format.replace(/MM/g, addLeadingZeros(dateProperties.M))
+  .replace(/M/g, dateProperties.M);
 }
 
 SuperDate.prototype.f = SuperDate.prototype.format;
