@@ -10,10 +10,10 @@ const base64Crypto = {
    * @param {Number} maskLevel 
    * @returns {String}
    */
-  e(input, maskLevel=1) {
+  e(input, maskLevel=1, seed) {
     if (typeof input === 'object') input = safeStringify(input);
     if (typeof input !== 'string') input = str(input);
-    return mask(secureBase64(textToBase64(input)), 64, maskLevel);
+    return mask(secureBase64(textToBase64(input)), 64, maskLevel, seed);
   },
   /**
    * Decode 解密
@@ -22,8 +22,8 @@ const base64Crypto = {
    * @param {Boolean} tryParseJSON 
    * @returns 
    */
-  d(input, maskLevel=1, tryParseJSON=true) {
-    input = base64ToText(unmask(input, 64, maskLevel));
+  d(input, maskLevel=1, seed, tryParseJSON=true) {
+    input = base64ToText(unmask(input, 64, maskLevel, seed));
     if (!tryParseJSON) return input;
     try { return JSON.parse(input); }
     catch (err) { return input; }
