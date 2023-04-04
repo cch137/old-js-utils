@@ -22,7 +22,7 @@ const mask = (string, charset=16, level=1, seed) => {
     ...characters.map(char => generator()[realCharset.indexOf(char)])
   ];
   if (--level < 1) return result.join('');
-  return mask(result, charset, level);
+  return mask(result, charset, level, seed);
 }
 
 /** @param {String} string @returns {String} */
@@ -34,7 +34,7 @@ const unmask = (string, charset=16, level=1, seed) => {
   const characters = (typeof string === 'string' ? string.split('') : string).slice(1, string.length);
   const result = characters.map(char => realCharset[generator().indexOf(char)]);
   if (--level < 1) return result.join('');
-  return unmask(result, charset, level);
+  return unmask(result, charset, level, seed);
 }
 
 module.exports = { mask, unmask };
