@@ -1,4 +1,4 @@
-const { str } = require(".");
+const { str, lower } = require(".");
 
 
 const BASE2_CHARSET = '01',
@@ -12,7 +12,7 @@ BASE64WEB_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 
 /** @param {Number|String} radix */
 const getCharset = (radix) => {
-  if (typeof radix !== 'string') radix = str(radix).toLowerCase();
+  if (typeof radix !== 'string') radix = lower(radix);
   switch (radix) {
     case '2':
       return BASE2_CHARSET;

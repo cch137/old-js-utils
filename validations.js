@@ -30,7 +30,7 @@ const testStringFormat = (str, minLen, maxLen, regexp, name='item', throwInvalid
  */
 const isStringFormat = (str, testFunc) => {
   try {
-    return testFunc(str);
+    return Boolean(testFunc(str));
   } catch {
     return false;
   }
@@ -50,7 +50,13 @@ const validations = {
   testPasswd: (str) => testStringFormat(str, 8, 64, /^[a-zA-Z0-9`~!@#$%^&*()-_=+[{\]}|;:'",<.>/?]+$/, 'password'),
 
   /** @param {String} str @param {Number} [minLen] @param {Number} [maxLen] */
-  testBase64: (str, minLen=0, maxLen='') => new RegExp(`^[A-Za-z0-9\\-\\_]{${minLen},${maxLen}}$`).test(str),
+  testWebBase64: (str, minLen=0, maxLen='') => new RegExp(`^[A-Za-z0-9\\-\\_]{${minLen},${maxLen}}$`).test(str),
+
+  /** @param {String} str @param {Number} [minLen] @param {Number} [maxLen] */
+  testBase64: (str, minLen=0, maxLen='') => new RegExp(`^[A-Za-z0-9\\+\\/]{${minLen},${maxLen}}$`).test(str),
+
+  /** @param {String} str @param {Number} [minLen] @param {Number} [maxLen] */
+  testHex: (str, minLen=0, maxLen='') => new RegExp(`^[A-Fa-f0-9]{${minLen},${maxLen}}$`).test(str),
 
   /** @param {String} str */
   isEmailAddress: (str) => isStringFormat(str, validations.testEmailAddress),
@@ -62,7 +68,13 @@ const validations = {
   isPasswd: (str) => isStringFormat(str, validations.testPasswd),
 
   /** @param {String} str */
+  isWebBase64: (str) => isStringFormat(str, validations.testWebBase64),
+
+  /** @param {String} str */
   isBase64: (str) => isStringFormat(str, validations.testBase64),
+
+  /** @param {String} str */
+  isHex: (str) => isStringFormat(str, validations.testHex),
 
   /** @param {String} str */
   filterAsciiChars(str) {
