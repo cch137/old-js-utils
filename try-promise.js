@@ -2,7 +2,7 @@
  * @param {Function} callback 
  * @returns {Promise<*>}
  */
-const TryPromise = (callback) => {
+const tryPromise = (callback) => {
   return new Promise(async (resolve, reject) => {
     try {
       resolve(await callback());
@@ -12,4 +12,4 @@ const TryPromise = (callback) => {
   });
 }
 
-module.exports = TryPromise;
+module.exports = tryPromise;
