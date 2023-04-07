@@ -4,4 +4,7 @@ class PromisesSet extends Set {
   }
 }
 
-module.exports = (iterable) => new PromisesSet(iterable);
+const promisesSet = (iterable) => new PromisesSet(iterable);
+promisesSet.PromisesSet = PromisesSet;
+
+module.exports = promisesSet;
